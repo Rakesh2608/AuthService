@@ -13,27 +13,24 @@ import dev.rakesh.userservice.repositories.UserRepository;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.io.Decoders;
 import io.jsonwebtoken.security.Keys;
-import io.jsonwebtoken.security.SignatureAlgorithm;
 import lombok.RequiredArgsConstructor;
-import org.apache.commons.lang3.RandomStringUtils;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.util.MultiValueMapAdapter;
 
 import javax.crypto.SecretKey;
-import java.security.Key;
-import java.util.*;
-
-import static io.jsonwebtoken.Jwts.SIG.HS256;
+import java.util.HashMap;
+import java.util.Map;
+import java.util.Optional;
 
 @Service
 @RequiredArgsConstructor
 public class AuthServiceImpl implements AuthService{
     private final SessionRepository sessionRepository;
     private final UserRepository userRepository;
-    private final BCryptPasswordEncoder bCryptPasswordEncoder=new BCryptPasswordEncoder();
+    private final PasswordEncoder bCryptPasswordEncoder;
 
     @Override
     public ResponseEntity<UserDto> login(String email, String password) throws UserNotFoundException, PasswordNotMatchException {
