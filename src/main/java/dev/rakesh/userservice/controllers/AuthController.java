@@ -5,6 +5,7 @@ import dev.rakesh.userservice.exceptions.PasswordNotMatchException;
 import dev.rakesh.userservice.exceptions.UserAlreadyPresentException;
 import dev.rakesh.userservice.exceptions.UserNotFoundException;
 import dev.rakesh.userservice.models.SessionStatus;
+import dev.rakesh.userservice.security.services.ProductClientService;
 import dev.rakesh.userservice.services.AuthService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
@@ -22,7 +23,7 @@ import java.util.Optional;
 @RequestMapping("/auth")
 public class AuthController {
     private final AuthService authService;
-    
+    private final ProductClientService productClientService;
     @PostMapping ("/login")
     public ResponseEntity<UserDto> login(@RequestBody LoginDto loginDto) throws UserNotFoundException, PasswordNotMatchException {
         String email=loginDto.getEmail();
@@ -51,5 +52,13 @@ public class AuthController {
     public ResponseEntity<UserDto> signup(@RequestBody SignupDto signupDto) throws UserAlreadyPresentException {
         UserDto userDto=authService.signup(signupDto);
         return new ResponseEntity<>(userDto,HttpStatus.OK);
+    }
+
+
+    @PostMapping("/createProduct")
+    public ResponseEntity<ProductResponseDto> createProduct(@RequestBody ProductRequestDto productRequestDto){
+
+        ProductResponseDto productResponseDto= productClientService.createProduct(productRequestDto.getName(),productRequestDto.getImage(),productRequestDto.getPrice());
+        return new ResponseEntity<>(productResponseDto,HttpStatus.OK);
     }
 }
